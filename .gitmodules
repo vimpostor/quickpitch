@@ -1,3 +1,6 @@
 [submodule "fluid"]
 	path = fluid
 	url = https://github.com/lirios/fluid.git
+[submodule "aubio"]
+	path = aubio
+	url = https://github.com/aubio/aubio.git
