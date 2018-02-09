@@ -9,8 +9,8 @@ extern "C" {
 #include "aubio.h"
 }
 
-#define BUF_SIZE 2048
-#define HOP_SIZE 512
+#define BUF_SIZE 8192
+#define HOP_SIZE 2048
 
 class PitchBuffer : public QIODevice
 {

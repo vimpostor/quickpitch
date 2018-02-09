@@ -7,14 +7,16 @@
 #include <memory>
 
 #include "pitchbuffer.h"
+#include "pitch.h"
+
+#define SAMPLE_RATE 48000
 
 class PitchDetector : public QObject
 {
 	Q_OBJECT
 	Q_PROPERTY(bool active MEMBER m_active WRITE setActive NOTIFY activeChanged)
-	Q_PROPERTY(float lastConfidentPitch MEMBER m_lastConfidentPitch NOTIFY samplesAnalyzed())
-	Q_PROPERTY(float lastConfidence MEMBER m_lastConfidence NOTIFY samplesAnalyzed())
-	Q_PROPERTY(float confidenceThreshold MEMBER m_confidenceThreshold)
+	Q_PROPERTY(Pitch currentPitch MEMBER m_currentPitch NOTIFY samplesAnalyzed())
+	Q_PROPERTY(Pitch confidentPitch MEMBER m_lastConfidentPitch NOTIFY samplesAnalyzed())
 public:
 	explicit PitchDetector(QObject *parent = nullptr);
 	~PitchDetector();
@@ -32,9 +34,8 @@ private:
 	aubio_pitch_t *m_aubioPitch;
 	fvec_t *m_aubioIn;
 	fvec_t *m_aubioOut;
-	float m_lastPitch = 0;
-	float m_lastConfidentPitch = 0;
-	float m_lastConfidence = 0;
+	Pitch m_currentPitch;
+	Pitch m_lastConfidentPitch;
 	float m_confidenceThreshold = .75;
 private slots:
 	void analyzeSamples();

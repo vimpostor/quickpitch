@@ -22,7 +22,7 @@ ApplicationWindow {
 		HeadlineLabel {
 			id: pitchLabel
 			anchors.centerIn: parent
-			text: "Frequency: " + pitchDetector.lastConfidentPitch + " Hz\nConfidence: " + pitchDetector.lastConfidence
+			text: "Frequency: " + pitchDetector.confidentPitch.frequency + " Hz\nConfidence: " + pitchDetector.confidentPitch.confidence + "\nNote name: " + pitchDetector.confidentPitch.noteLong + "\nAccuracy: " + pitchDetector.confidentPitch.accuracy
 		}
 		PitchDetector {
 			id: pitchDetector

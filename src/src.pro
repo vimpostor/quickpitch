@@ -18,7 +18,8 @@ INCLUDEPATH += $$PWD/../aubio/src
 
 SOURCES += main.cpp \
     pitchdetector.cpp \
-    pitchbuffer.cpp
+    pitchbuffer.cpp \
+	pitch.cpp
 
 RESOURCES += qml/qml.qrc
 
@@ -58,4 +59,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     pitchdetector.h \
-    pitchbuffer.h
+    pitchbuffer.h \
+	pitch.h

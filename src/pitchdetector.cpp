@@ -3,7 +3,7 @@
 
 PitchDetector::PitchDetector(QObject *parent) : QObject(parent)
 {
-	m_format.setSampleRate(8000);
+	m_format.setSampleRate(SAMPLE_RATE);
 	// mono sound
 	m_format.setChannelCount(1);
 	// aubio requires float
@@ -15,7 +15,7 @@ PitchDetector::PitchDetector(QObject *parent) : QObject(parent)
 	connect(&m_dev, SIGNAL(samplesReady()), this, SLOT(analyzeSamples()));
 
 	// aubio init
-	m_aubioPitch = new_aubio_pitch("default", BUF_SIZE, HOP_SIZE, 8000);
+	m_aubioPitch = new_aubio_pitch("default", BUF_SIZE, HOP_SIZE, SAMPLE_RATE);
 	m_aubioIn = new_fvec(HOP_SIZE);
 	m_aubioOut = new_fvec(1);
 }
@@ -41,16 +41,15 @@ void PitchDetector::setActive(bool active)
 
 void PitchDetector::analyzeSamples()
 {
-	// load the samples
-	if (!m_dev.getSamples(m_aubioIn)) {
-		qDebug() << "false update";
-		return;
+	// while new samples are available
+	while (m_dev.getSamples(m_aubioIn)) {
+		aubio_pitch_do(m_aubioPitch, m_aubioIn, m_aubioOut);
+		float frequency = m_aubioOut->data[0];
+		float confidence = aubio_pitch_get_confidence(m_aubioPitch);
+		m_currentPitch.setPitch(frequency, confidence);
+		if (confidence >= m_confidenceThreshold) {
+			m_lastConfidentPitch = m_currentPitch;
+		}
+		emit samplesAnalyzed();
 	}
-	aubio_pitch_do(m_aubioPitch, m_aubioIn, m_aubioOut);
-	m_lastPitch = m_aubioOut->data[0];
-	m_lastConfidence = aubio_pitch_get_confidence(m_aubioPitch);
-	if (m_lastConfidence >= m_confidenceThreshold) {
-		m_lastConfidentPitch = m_lastPitch;
-	}
-	emit samplesAnalyzed();
 }
