@@ -74,9 +74,24 @@ float Pitch::offsetToFrequency(int aOffset)
 	return A_PITCH * std::pow(halfNoteDiff, aOffset);
 }
 
-// y = 440*s^x
-// y/440 = s^x
-// log_s(y/440) = x
+/**
+ * @brief Calculates the halftone offset from A4 for a given pitch
+ *
+ * We know how to calculate a given pitch from an offset, by evaluating a simple exponential term.
+ * Let s = 2^(1/12). Then any pitch f can be calculated from an offset o by computing f = 440 * s^o.
+ *
+ * This function computes the inverse. For any frequency f, we have:
+ *
+ * f = 440 * s^o
+ *
+ * <=> f / 440 = s^o
+ *
+ * <=> log(f / 440) / log(s) = o
+ *
+ * Evaluating this inverse formula and rounding the result to the next integer yields the nearest offset for frequency f.
+ * @param f The frequency of the pitch in Hz
+ * @return The halftone offset from A4
+ */
 int Pitch::frequencyToOffset(float f)
 {
 	if (f <= 0) {
