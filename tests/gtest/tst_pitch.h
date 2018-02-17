@@ -11,6 +11,9 @@ TEST(Pitch, Pitch)
 	Pitch p;
 	p.setFrequency(A_PITCH);
 	EXPECT_EQ(p.getFrequency(), A_PITCH);
+	EXPECT_EQ("a4", p.getNoteLong().toStdString());
+	p.setConfidence(1.f);
+	EXPECT_FLOAT_EQ(p.getConfidence(), 1.f);
 	for (int i = -16; i < 17; ++i) {
 		// if we set the frequency to a perfect pitch, it should identify the correct offset
 		p.setFrequency(A_PITCH * std::pow(2.f, i / 12.f));
