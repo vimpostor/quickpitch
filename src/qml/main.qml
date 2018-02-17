@@ -12,13 +12,6 @@ ApplicationWindow {
 	height: 480
 	initialPage: Page {
 		title: qsTr("Quick Pitch")
-		Button {
-			id: recordButton
-			anchors.bottom: pitchLabel.top
-			anchors.horizontalCenter: parent.horizontalCenter
-			text: "Record"
-			onClicked: pitchDetector.active = true;
-		}
 		HeadlineLabel {
 			id: pitchLabel
 			anchors.centerIn: parent
@@ -26,6 +19,7 @@ ApplicationWindow {
 		}
 		PitchDetector {
 			id: pitchDetector
+			active: true
 		}
 	}
 }
