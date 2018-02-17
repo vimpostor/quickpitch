@@ -12,6 +12,11 @@ ApplicationWindow {
 	height: 480
 	initialPage: Page {
 		title: qsTr("Quick Pitch")
+		OctaveIndicator {
+			anchors.top: parent.top
+			anchors.horizontalCenter: parent.horizontalCenter
+			octave: pitchDetector.confidentPitch.octave
+		}
 		HeadlineLabel {
 			id: pitchLabel
 			anchors.centerIn: parent
