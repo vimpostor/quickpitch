@@ -12,6 +12,17 @@ ApplicationWindow {
 	height: 480
 	initialPage: Page {
 		title: qsTr("Quick Pitch")
+		actions: [
+			Action {
+				icon.source: Utils.iconUrl("action/settings")
+				text: qsTr("Settings")
+				shortcut: "Ctrl+I"
+				onTriggered: {
+					pitchDetector.active = false;
+					pageStack.push(Qt.resolvedUrl("Settings.qml"));
+				}
+			}
+		]
 		OctaveIndicator {
 			anchors.top: parent.top
 			anchors.horizontalCenter: parent.horizontalCenter

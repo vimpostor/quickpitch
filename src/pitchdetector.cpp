@@ -15,7 +15,7 @@ PitchDetector::PitchDetector(QObject *parent) : QObject(parent)
 	connect(&m_dev, SIGNAL(samplesReady()), this, SLOT(analyzeSamples()));
 
 	// aubio init
-	m_aubioPitch = new_aubio_pitch("default", BUF_SIZE, HOP_SIZE, SAMPLE_RATE);
+	m_aubioPitch = new_aubio_pitch(m_algorithm.toLatin1().data(), BUF_SIZE, HOP_SIZE, SAMPLE_RATE);
 	m_aubioIn = new_fvec(HOP_SIZE);
 	m_aubioOut = new_fvec(1);
 }
@@ -37,6 +37,19 @@ void PitchDetector::setActive(bool active)
 	} else {
 		m_rec->stop();
 	}
+	m_active = active;
+}
+
+void PitchDetector::setAlgorithm(QString algorithm)
+{
+	if (algorithm == m_algorithm) {
+		return;
+	}
+	m_algorithm = algorithm;
+	// create new aubio pitch object
+	// CRITICAL section
+	del_aubio_pitch(m_aubioPitch);
+	m_aubioPitch = new_aubio_pitch(m_algorithm.toLatin1().data(), BUF_SIZE, HOP_SIZE, SAMPLE_RATE);
 }
 
 void PitchDetector::analyzeSamples()
