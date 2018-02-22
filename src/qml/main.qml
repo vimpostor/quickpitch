@@ -21,7 +21,14 @@ ApplicationWindow {
 					pitchDetector.active = false;
 					pageStack.push(Qt.resolvedUrl("Settings.qml"));
 				}
+			},
+			Action {
+				icon.source: Utils.iconUrl("navigation/close")
+				text: qsTr("Quit")
+				onTriggered: close();
+				shortcut: "Ctrl+Q"
 			}
+
 		]
 		OctaveIndicator {
 			anchors.top: parent.top
