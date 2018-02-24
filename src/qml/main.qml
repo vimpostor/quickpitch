@@ -31,14 +31,15 @@ ApplicationWindow {
 
 		]
 		OctaveIndicator {
+			id: octaveIndicator
 			anchors.top: parent.top
 			anchors.horizontalCenter: parent.horizontalCenter
 			octave: pitchDetector.confidentPitch.octave
 		}
-		HeadlineLabel {
-			id: pitchLabel
+		NoteAccuracyIndicator {
 			anchors.centerIn: parent
-			text: "Frequency: " + pitchDetector.confidentPitch.frequency + " Hz\nConfidence: " + pitchDetector.confidentPitch.confidence + "\nNote name: " + pitchDetector.confidentPitch.noteLong + "\nAccuracy: " + pitchDetector.confidentPitch.accuracy
+			noteName: pitchDetector.confidentPitch.noteLong
+			accuracy: pitchDetector.confidentPitch.accuracy
 		}
 		PitchDetector {
 			id: pitchDetector

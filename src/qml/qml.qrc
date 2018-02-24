@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>OctaveIndicator.qml</file>
         <file>Settings.qml</file>
+        <file>NoteAccuracyIndicator.qml</file>
     </qresource>
 </RCC>
