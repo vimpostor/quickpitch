@@ -5,6 +5,8 @@
 #include <string>
 #include <QObject>
 
+#include "util.h"
+
 #define A_PITCH 440.f
 #define A_OCTAVE 4
 
@@ -41,7 +43,7 @@ public:
 
 	static const QString noteNames[12];
 	static constexpr float halfNoteDiff = std::pow(2.f, 1.f / 12);
-	static constexpr float logHalfNoteDiff = std::log2(halfNoteDiff);
+	static constexpr float logHalfNoteDiff = Util::log2(halfNoteDiff);
 private:
 	float m_frequency;
 	float m_confidence;

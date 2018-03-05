@@ -98,7 +98,7 @@ int Pitch::frequencyToOffset(float f)
 		return 0;
 	}
 	const float arg = f / 440;
-	return std::round(std::log2(arg) / logHalfNoteDiff);
+	return Util::round(Util::log2(arg) / logHalfNoteDiff);
 }
 
 QString Pitch::offsetToNote(int o)
