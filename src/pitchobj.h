@@ -1,7 +1,6 @@
 #ifndef PITCH_H
 #define PITCH_H
 
-#include <math.h>
 #include <string>
 #include <QObject>
 

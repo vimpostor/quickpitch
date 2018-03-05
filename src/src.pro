@@ -55,7 +55,7 @@ android {
 	ANDROID_EXTRA_PLUGINS = $$OUT_PWD/../fluid/qml
 
 	# Android package sources
-	ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
+#	ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 }
 
 macx {
