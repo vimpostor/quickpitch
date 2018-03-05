@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 
-SUBDIRS += fluid src tests/gtest
+SUBDIRS += fluid src
