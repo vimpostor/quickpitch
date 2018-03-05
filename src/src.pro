@@ -19,8 +19,32 @@ INCLUDEPATH += $$PWD/../aubio/src
 SOURCES += main.cpp \
     pitchdetector.cpp \
     pitchbuffer.cpp \
-	pitch.cpp \
-    util.cpp
+	util.cpp \
+    pitchobj.cpp
+
+# aubio
+QMAKE_CFLAGS += "-include $$_PRO_FILE_PWD_/compilerfix.h"
+QMAKE_CXXFLAGS += "-include $$_PRO_FILE_PWD_/compilerfix.h"
+HEADERS += compilerfix.h
+SOURCES += ../aubio/src/pitch/pitch.c \
+	../aubio/src/fvec.c \
+	../aubio/src/utils/log.c \
+	../aubio/src/pitch/pitchyin.c \
+	../aubio/src/spectral/phasevoc.c \
+	../aubio/src/cvec.c \
+	../aubio/src/pitch/pitchmcomb.c \
+	../aubio/src/temporal/c_weighting.c \
+	../aubio/src/pitch/pitchfcomb.c \
+	../aubio/src/pitch/pitchschmitt.c \
+	../aubio/src/pitch/pitchspecacf.c \
+	../aubio/src/pitch/pitchyinfft.c \
+	../aubio/src/pitch/pitchyinfast.c \
+	../aubio/src/temporal/filter.c \
+	../aubio/src/mathutils.c \
+	../aubio/src/spectral/fft.c \
+	../aubio/src/lvec.c \
+	../aubio/src/spectral/ooura_fft8g.c
+
 
 RESOURCES += qml/qml.qrc
 
@@ -45,8 +69,6 @@ win32 {
 	WINDEPLOYQT_OPTIONS = -qmldir $$OUT_PWD/../fluid/qml/Fluid
 }
 
-unix|win32: LIBS += -laubio
-
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH = $$OUT_PWD/../fluid/qml
 
@@ -61,5 +83,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     pitchdetector.h \
     pitchbuffer.h \
-	pitch.h \
-    util.h
+	util.h \
+	pitchobj.h

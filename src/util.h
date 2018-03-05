@@ -1,7 +1,7 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <math.h>
+#include <cmath>
 
 namespace Util {
 	template<typename T>
@@ -17,7 +17,7 @@ namespace Util {
 	constexpr T log(T arg) {
 #ifdef ANDROID
 		// TODO: Reimplement log, the shitty Android NDK does not provide it
-		return 1;
+		return std::log(arg);
 #else
 		return std::log(arg);
 #endif

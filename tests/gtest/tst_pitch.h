@@ -4,11 +4,11 @@
 using namespace testing;
 
 
-#include "pitch.h"
+#include "pitchobj.h"
 
-TEST(Pitch, Pitch)
+TEST(PitchObj, PitchObj)
 {
-	Pitch p;
+	PitchObj p;
 	p.setFrequency(A_PITCH);
 	EXPECT_EQ(p.getFrequency(), A_PITCH);
 	EXPECT_EQ("a4", p.getNoteLong().toStdString());

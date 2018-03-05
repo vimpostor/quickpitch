@@ -10,7 +10,7 @@
 #define A_PITCH 440.f
 #define A_OCTAVE 4
 
-class Pitch
+class PitchObj
 {
 	Q_GADGET
 	Q_PROPERTY(float frequency READ getFrequency())
@@ -21,8 +21,8 @@ class Pitch
 	Q_PROPERTY(float accuracy READ getAccuracy())
 	Q_PROPERTY(int octave READ getOctave())
 public:
-	Pitch();
-	Pitch(float frequency, float confidence = 1.f);
+	PitchObj();
+	PitchObj(float frequency, float confidence = 1.f);
 
 	void setFrequency(const float f);
 	float getFrequency() const;
@@ -49,9 +49,9 @@ private:
 	float m_confidence;
 };
 
-Q_DECLARE_METATYPE(Pitch)
+Q_DECLARE_METATYPE(PitchObj)
 
-bool operator ==(const Pitch &l, const Pitch &r);
-bool operator !=(const Pitch &l, const Pitch &r);
+bool operator ==(const PitchObj &l, const PitchObj &r);
+bool operator !=(const PitchObj &l, const PitchObj &r);
 
 #endif // PITCH_H

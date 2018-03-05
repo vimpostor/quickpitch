@@ -1,57 +1,57 @@
-#include "pitch.h"
+#include "pitchobj.h"
 #include <QDebug>
 
-const QString Pitch::noteNames[12] = {
+const QString PitchObj::noteNames[12] = {
 	"a", "b", "h", "c", "cis", "d", "dis", "e", "f", "fis", "g", "gis"
 };
 
 
-Pitch::Pitch() : Pitch(0)
+PitchObj::PitchObj() : PitchObj(0)
 {
 }
 
-Pitch::Pitch(float frequency, float confidence)
+PitchObj::PitchObj(float frequency, float confidence)
 {
 	setPitch(frequency, confidence);
 }
 
-void Pitch::setFrequency(const float f)
+void PitchObj::setFrequency(const float f)
 {
 	m_frequency = f;
 }
 
-float Pitch::getFrequency() const
+float PitchObj::getFrequency() const
 {
 	return m_frequency;
 }
 
-void Pitch::setConfidence(const float c)
+void PitchObj::setConfidence(const float c)
 {
 	m_confidence = c;
 }
 
-float Pitch::getConfidence() const
+float PitchObj::getConfidence() const
 {
 	return m_confidence;
 }
 
-void Pitch::setPitch(const float frequency, const float confidence)
+void PitchObj::setPitch(const float frequency, const float confidence)
 {
 	setFrequency(frequency);
 	setConfidence(confidence);
 }
 
-int Pitch::getOffset() const
+int PitchObj::getOffset() const
 {
 	return frequencyToOffset(getFrequency());
 }
 
-QString Pitch::getNoteLong() const
+QString PitchObj::getNoteLong() const
 {
 	return getNote() + QString::number(getOctave());
 }
 
-QString Pitch::getNote() const
+QString PitchObj::getNote() const
 {
 	if (getFrequency() <= 0) {
 		return "No Pitch";
@@ -59,17 +59,17 @@ QString Pitch::getNote() const
 	return offsetToNote(getOffset());
 }
 
-float Pitch::getAccuracy() const
+float PitchObj::getAccuracy() const
 {
 	return pitchToAccuracy(getFrequency(), getOffset());
 }
 
-int Pitch::getOctave() const
+int PitchObj::getOctave() const
 {
 	return offsetToOctave(getOffset());
 }
 
-float Pitch::offsetToFrequency(int aOffset)
+float PitchObj::offsetToFrequency(int aOffset)
 {
 	return A_PITCH * std::pow(halfNoteDiff, aOffset);
 }
@@ -92,7 +92,7 @@ float Pitch::offsetToFrequency(int aOffset)
  * @param f The frequency of the pitch in Hz
  * @return The halftone offset from A4
  */
-int Pitch::frequencyToOffset(float f)
+int PitchObj::frequencyToOffset(float f)
 {
 	if (f <= 0) {
 		return 0;
@@ -101,12 +101,12 @@ int Pitch::frequencyToOffset(float f)
 	return Util::round(Util::log2(arg) / logHalfNoteDiff);
 }
 
-QString Pitch::offsetToNote(int o)
+QString PitchObj::offsetToNote(int o)
 {
 	return noteNames[(o + 120) % 12];
 }
 
-float Pitch::pitchToAccuracy(const float frequency, const int offset)
+float PitchObj::pitchToAccuracy(const float frequency, const int offset)
 {
 	const float perfectPitch = offsetToFrequency(offset);
 	if (frequency >= perfectPitch) {
@@ -116,17 +116,17 @@ float Pitch::pitchToAccuracy(const float frequency, const int offset)
 	}
 }
 
-int Pitch::offsetToOctave(int aOffset)
+int PitchObj::offsetToOctave(int aOffset)
 {
 	return A_OCTAVE + std::floor((aOffset + 9) / 12.f);
 }
 
-bool operator ==(const Pitch &l, const Pitch &r)
+bool operator ==(const PitchObj &l, const PitchObj &r)
 {
 	return (l.getFrequency() == r.getFrequency()) && (l.getConfidence() == r.getConfidence());
 }
 
-bool operator !=(const Pitch &l, const Pitch &r)
+bool operator !=(const PitchObj &l, const PitchObj &r)
 {
 	return !(l == r);
 }

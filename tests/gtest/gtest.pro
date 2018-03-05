@@ -15,4 +15,4 @@ SOURCES +=     main.cpp
 
 INCLUDEPATH += ../../src
 
-SOURCES += ../../src/pitch.cpp
+SOURCES += ../../src/pitchobj.cpp
