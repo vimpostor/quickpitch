@@ -2,6 +2,8 @@
 #define UTIL_H
 
 #include <cmath>
+#include <memory>
+#include <algorithm>
 
 namespace Util {
 	template<typename T>
@@ -20,6 +22,11 @@ namespace Util {
 #else
 		return std::log2(arg);
 #endif
+	}
+
+	template<typename Cnt_T, typename UnaryFunction>
+	UnaryFunction for_each(Cnt_T &cnt, UnaryFunction f) {
+		return std::for_each(std::begin(cnt), std::end(cnt), f);
 	}
 }
 

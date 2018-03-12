@@ -24,6 +24,7 @@ public:
 
 	void setActive(bool active);
 	void setAlgorithm(QString algorithm);
+	Q_INVOKABLE void setLineSeries(QLineSeries *series);
 signals:
 	void activeChanged();
 	void samplesAnalyzed();

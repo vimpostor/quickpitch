@@ -4,6 +4,9 @@
 #include <QIODevice>
 #include <QBuffer>
 #include <queue>
+#include <QtCharts>
+
+#include "util.h"
 
 extern "C" {
 #include "aubio.h"
@@ -19,6 +22,7 @@ public:
 	explicit PitchBuffer(QObject *parent = nullptr);
 
 	bool getSamples(fvec_t *samplesDest);
+	QLineSeries *series = nullptr;
 signals:
 	void samplesReady();
 protected:

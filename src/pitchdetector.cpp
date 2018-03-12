@@ -52,6 +52,11 @@ void PitchDetector::setAlgorithm(QString algorithm)
 	m_aubioPitch = new_aubio_pitch(m_algorithm.toLatin1().data(), BUF_SIZE, HOP_SIZE, SAMPLE_RATE);
 }
 
+void PitchDetector::setLineSeries(QLineSeries *series)
+{
+	m_dev.series = series;
+}
+
 void PitchDetector::analyzeSamples()
 {
 	// while new samples are available

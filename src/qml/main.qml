@@ -1,6 +1,7 @@
 import QtQuick 2.10
 import QtQuick.Window 2.10
 import QtQuick.Controls 2.2
+import QtCharts 2.2
 
 import Fluid.Controls 1.0
 
@@ -30,6 +31,34 @@ ApplicationWindow {
 			}
 
 		]
+		ChartView {
+			id: chartView
+			anchors.fill: parent
+			legend.visible: false
+			ValueAxis {
+				id: axisX
+				min: 0
+				max: 7999
+				labelsVisible: false
+				gridVisible: false
+			}
+			ValueAxis {
+				id: axisY
+				min: -1
+				max: 1
+				labelsVisible: false
+				gridVisible: false
+			}
+			LineSeries {
+				id: lineSeries
+				axisX: axisX
+				axisY: axisY
+				useOpenGL: true
+				Component.onCompleted: {
+					pitchDetector.setLineSeries(lineSeries);
+				}
+			}
+		}
 		OctaveIndicator {
 			id: octaveIndicator
 			anchors.top: parent.top

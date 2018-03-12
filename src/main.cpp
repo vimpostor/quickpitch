@@ -1,4 +1,4 @@
-#include <QGuiApplication>
+#include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QDir>
 #include <QQuickStyle>
@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 {
 	QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 	QQuickStyle::setStyle(QLatin1String("Material"));
-	QGuiApplication app(argc, argv);
+	QApplication app(argc, argv);
 
 	qmlRegisterType<PitchDetector>("PitchDetector", 1, 0, "PitchDetector");
 
