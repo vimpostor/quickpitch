@@ -35,6 +35,10 @@ ApplicationWindow {
 			id: chartView
 			anchors.fill: parent
 			legend.visible: false
+			margins.top: 0
+			margins.left: 0
+			margins.bottom: 0
+			margins.right: 0
 			ValueAxis {
 				id: axisX
 				min: 0
