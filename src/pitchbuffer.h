@@ -5,6 +5,7 @@
 #include <QBuffer>
 #include <queue>
 #include <QtCharts>
+#include <QAudioInput>
 
 #include "util.h"
 
@@ -23,13 +24,17 @@ public:
 
 	bool getSamples(fvec_t *samplesDest);
 	QLineSeries *series = nullptr;
+	void setSampleType(QAudioFormat::SampleType type, int size);
 signals:
 	void samplesReady();
 protected:
 	qint64 readData(char *data, qint64 maxlen);
 	qint64 writeData(const char *data, qint64 len);
 private:
+	std::vector<float> getFloatSamples(const char *data, qint64 len);
 	std::queue<float> m_buf;
+	QAudioFormat::SampleType sampleType = QAudioFormat::SampleType::Float;
+	int sampleSize = sizeof(float);
 };
 
 #endif // PITCHBUFFER_H

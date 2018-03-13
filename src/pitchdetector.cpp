@@ -4,19 +4,25 @@
 PitchDetector::PitchDetector(QObject *parent) : QObject(parent)
 {
 	m_format.setSampleRate(SAMPLE_RATE);
+	m_format.setCodec("audio/pcm");
 	// mono sound
 	m_format.setChannelCount(1);
 	// aubio requires float
 	m_format.setSampleType(QAudioFormat::SampleType::Float);
 	// floats have a size of 32 bit
 	m_format.setSampleSize(sizeof(float) * 8);
-	m_format.setCodec("audio/pcm");
 	// test if the format is supported
 	QAudioDeviceInfo info = QAudioDeviceInfo::defaultInputDevice();
 	if (!info.isFormatSupported(m_format)) {
-		qWarning() << "Default format not supported, trying to use the nearest.";
-		m_format = info.nearestFormat(m_format);
+		qWarning() << "Default format not supported, trying to use 16bit signed integer samples";
+		m_format.setSampleType(QAudioFormat::SampleType::SignedInt);
+		m_format.setSampleSize(sizeof(int16_t) * 8);
+		if (!info.isFormatSupported(m_format)) {
+			qWarning() << "No support for 16bit signed integer samples. Trying nearest format, the program will probably not work.";
+			m_format = info.nearestFormat(m_format);
+		}
 	}
+	m_dev.setSampleType(m_format.sampleType(), m_format.sampleSize() / 8);
 	m_rec = new QAudioInput(m_format, this);
 	connect(&m_dev, SIGNAL(samplesReady()), this, SLOT(analyzeSamples()));
 

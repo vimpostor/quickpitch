@@ -17,6 +17,12 @@ bool PitchBuffer::getSamples(fvec_t *samplesDest)
 	return true;
 }
 
+void PitchBuffer::setSampleType(QAudioFormat::SampleType type, int size)
+{
+	this->sampleType = type;
+	this->sampleSize = size;
+}
+
 qint64 PitchBuffer::readData(char *data, qint64 maxlen)
 {
 	Q_UNUSED(data)
@@ -29,8 +35,8 @@ qint64 PitchBuffer::readData(char *data, qint64 maxlen)
 
 qint64 PitchBuffer::writeData(const char *data, qint64 len)
 {
-	const unsigned char *ptr = reinterpret_cast<const unsigned char *>(data);
-	const int numberNewSamples = len / sizeof(float);
+	auto samples = getFloatSamples(data, len);
+	const int numberNewSamples = samples.size();
 	QVector<QPointF> points = series->pointsVector();
 	// how much to move old samples to the left
 	const int translate = numberNewSamples - MAX_SERIES + points.size();
@@ -46,10 +52,9 @@ qint64 PitchBuffer::writeData(const char *data, qint64 len)
 		chartOffset -= translate;
 	}
 	for (int i = 0; i < numberNewSamples; ++i) {
-		const float sample = *reinterpret_cast<const float*>(ptr);
+		const float sample = samples[i];
 		m_buf.push(sample);
 		points.push_back(QPointF(chartOffset + i, sample));
-		ptr += sizeof(float);
 	}
 	if (m_buf.size() >= HOP_SIZE) {
 		emit samplesReady();
@@ -60,4 +65,34 @@ qint64 PitchBuffer::writeData(const char *data, qint64 len)
 	}
 	series->replace(points);
 	return len;
+}
+
+std::vector<float> PitchBuffer::getFloatSamples(const char *data, qint64 len)
+{
+	const auto signedInt16ToFloat = [](const int16_t i){ return i / 32768.f; };
+
+	const unsigned char *ptr = reinterpret_cast<const unsigned char *>(data);
+	std::vector<float> result;
+	const int numberSamples = len / sampleSize;
+	result.resize(numberSamples);
+	for (int i = 0; i < numberSamples; ++i) {
+		float sample;
+		switch (sampleType) {
+		case QAudioFormat::SampleType::Float:
+			sample = *reinterpret_cast<const float*>(ptr);
+			break;
+		case QAudioFormat::SampleType::SignedInt: {
+			// for the time being just assume, that it is a 16 bit int
+			int16_t s = *reinterpret_cast<const int16_t*>(ptr);
+			sample = signedInt16ToFloat(s);
+			break;
+		}
+		default:
+			sample = 0;
+			break;
+		}
+		result[i] = sample;
+		ptr += sampleSize;
+	}
+	return result;
 }

@@ -2,7 +2,6 @@
 #define PITCHDETECTOR_H
 
 #include <QObject>
-#include <QAudioInput>
 #include <QUrl>
 #include <memory>
 
