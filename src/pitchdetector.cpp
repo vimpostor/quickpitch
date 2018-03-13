@@ -11,6 +11,12 @@ PitchDetector::PitchDetector(QObject *parent) : QObject(parent)
 	// floats have a size of 32 bit
 	m_format.setSampleSize(sizeof(float) * 8);
 	m_format.setCodec("audio/pcm");
+	// test if the format is supported
+	QAudioDeviceInfo info = QAudioDeviceInfo::defaultInputDevice();
+	if (!info.isFormatSupported(m_format)) {
+		qWarning() << "Default format not supported, trying to use the nearest.";
+		m_format = info.nearestFormat(m_format);
+	}
 	m_rec = new QAudioInput(m_format, this);
 	connect(&m_dev, SIGNAL(samplesReady()), this, SLOT(analyzeSamples()));
 
