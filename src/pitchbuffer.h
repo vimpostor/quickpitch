@@ -33,8 +33,8 @@ protected:
 private:
 	std::vector<float> getFloatSamples(const char *data, qint64 len);
 	std::queue<float> m_buf;
-	QAudioFormat::SampleType sampleType = QAudioFormat::SampleType::Float;
-	int sampleSize = sizeof(float);
+	QAudioFormat::SampleType m_sampleType = QAudioFormat::SampleType::Float;
+	int m_sampleSize = sizeof(float);
 };
 
 #endif // PITCHBUFFER_H

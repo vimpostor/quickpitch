@@ -3,7 +3,7 @@
 
 PitchDetector::PitchDetector(QObject *parent) : QObject(parent)
 {
-	m_format.setSampleRate(SAMPLE_RATE);
+	m_format.setSampleRate(m_sampleRate);
 	m_format.setCodec("audio/pcm");
 	// mono sound
 	m_format.setChannelCount(1);
@@ -11,23 +11,12 @@ PitchDetector::PitchDetector(QObject *parent) : QObject(parent)
 	m_format.setSampleType(QAudioFormat::SampleType::Float);
 	// floats have a size of 32 bit
 	m_format.setSampleSize(sizeof(float) * 8);
-	// test if the format is supported
-	QAudioDeviceInfo info = QAudioDeviceInfo::defaultInputDevice();
-	if (!info.isFormatSupported(m_format)) {
-		qWarning() << "Default format not supported, trying to use 16bit signed integer samples";
-		m_format.setSampleType(QAudioFormat::SampleType::SignedInt);
-		m_format.setSampleSize(sizeof(int16_t) * 8);
-		if (!info.isFormatSupported(m_format)) {
-			qWarning() << "No support for 16bit signed integer samples. Trying nearest format, the program will probably not work.";
-			m_format = info.nearestFormat(m_format);
-		}
-	}
-	m_dev.setSampleType(m_format.sampleType(), m_format.sampleSize() / 8);
-	m_rec = new QAudioInput(m_format, this);
+	applyFormat();
+	m_rec = new QAudioInput(m_format);
 	connect(&m_dev, SIGNAL(samplesReady()), this, SLOT(analyzeSamples()));
 
 	// aubio init
-	m_aubioPitch = new_aubio_pitch(m_algorithm.toLatin1().data(), BUF_SIZE, HOP_SIZE, SAMPLE_RATE);
+	m_aubioPitch = new_aubio_pitch(m_algorithm.toLatin1().data(), BUF_SIZE, HOP_SIZE, m_sampleRate);
 	m_aubioIn = new_fvec(HOP_SIZE);
 	m_aubioOut = new_fvec(1);
 }
@@ -37,6 +26,7 @@ PitchDetector::~PitchDetector()
 	del_aubio_pitch(m_aubioPitch);
 	del_fvec(m_aubioIn);
 	del_fvec(m_aubioOut);
+	delete m_rec;
 }
 
 void PitchDetector::setActive(bool active)
@@ -58,15 +48,51 @@ void PitchDetector::setAlgorithm(QString algorithm)
 		return;
 	}
 	m_algorithm = algorithm;
-	// create new aubio pitch object
-	// CRITICAL section
-	del_aubio_pitch(m_aubioPitch);
-	m_aubioPitch = new_aubio_pitch(m_algorithm.toLatin1().data(), BUF_SIZE, HOP_SIZE, SAMPLE_RATE);
+	reloadAubio();
+}
+
+void PitchDetector::setSampleRate(const uint sampleRate)
+{
+	if (sampleRate == m_sampleRate) {
+		return;
+	}
+	m_sampleRate = sampleRate;
+	m_format.setSampleRate(m_sampleRate);
+	applyFormat();
+	delete m_rec;
+	m_rec = new QAudioInput(m_format);
+	connect(&m_dev, SIGNAL(samplesReady()), this, SLOT(analyzeSamples()));
+	setActive(m_active);
+	reloadAubio();
 }
 
 void PitchDetector::setLineSeries(QLineSeries *series)
 {
 	m_dev.series = series;
+}
+
+void PitchDetector::reloadAubio()
+{
+	// create new aubio pitch object
+	// CRITICAL section
+	del_aubio_pitch(m_aubioPitch);
+	m_aubioPitch = new_aubio_pitch(m_algorithm.toLatin1().data(), BUF_SIZE, HOP_SIZE, m_sampleRate);
+}
+
+void PitchDetector::applyFormat()
+{
+	// test if the format is supported
+	QAudioDeviceInfo info = QAudioDeviceInfo::defaultInputDevice();
+	if (!info.isFormatSupported(m_format)) {
+		qWarning() << "Default format not supported, trying to use 16bit signed integer samples";
+		m_format.setSampleType(QAudioFormat::SampleType::SignedInt);
+		m_format.setSampleSize(sizeof(int16_t) * 8);
+		if (!info.isFormatSupported(m_format)) {
+			qWarning() << "No support for 16bit signed integer samples. Trying nearest format, the program will probably not work.";
+			m_format = info.nearestFormat(m_format);
+		}
+	}
+	m_dev.setSampleType(m_format.sampleType(), m_format.sampleSize() / 8);
 }
 
 void PitchDetector::analyzeSamples()

@@ -19,8 +19,8 @@ bool PitchBuffer::getSamples(fvec_t *samplesDest)
 
 void PitchBuffer::setSampleType(QAudioFormat::SampleType type, int size)
 {
-	this->sampleType = type;
-	this->sampleSize = size;
+	m_sampleType = type;
+	m_sampleSize = size;
 }
 
 qint64 PitchBuffer::readData(char *data, qint64 maxlen)
@@ -73,11 +73,11 @@ std::vector<float> PitchBuffer::getFloatSamples(const char *data, qint64 len)
 
 	const unsigned char *ptr = reinterpret_cast<const unsigned char *>(data);
 	std::vector<float> result;
-	const int numberSamples = len / sampleSize;
+	const int numberSamples = len / m_sampleSize;
 	result.resize(numberSamples);
 	for (int i = 0; i < numberSamples; ++i) {
 		float sample;
-		switch (sampleType) {
+		switch (m_sampleType) {
 		case QAudioFormat::SampleType::Float:
 			sample = *reinterpret_cast<const float*>(ptr);
 			break;
@@ -92,7 +92,7 @@ std::vector<float> PitchBuffer::getFloatSamples(const char *data, qint64 len)
 			break;
 		}
 		result[i] = sample;
-		ptr += sampleSize;
+		ptr += m_sampleSize;
 	}
 	return result;
 }
