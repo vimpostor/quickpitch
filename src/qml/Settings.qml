@@ -14,25 +14,23 @@ TabbedPage {
 			ListItem {
 				text: qsTr("Pitch detection algorithm")
 				rightItem: ComboBox {
-					model: ListModel {
-						ListElement {name: "default"}
-						ListElement {name: "schmitt"}
-						ListElement {name: "fcomb"}
-						ListElement {name: "mcomb"}
-						ListElement {name: "yin"}
-						ListElement {name: "yinfft"}
+					model: [ "default", "schmitt", "fcomb", "mcomb", "yin", "yinfft" ]
+					Component.onCompleted: currentIndex = find(c_settings.algorithm);
+					onActivated: {
+						pitchDetector.algorithm = currentText;
+						c_settings.algorithm = pitchDetector.algorithm;
 					}
-					onCurrentTextChanged: pitchDetector.algorithm = currentText;
 				}
 			}
 			ListItem {
 				text: qsTr("Sample rate")
 				rightItem: ComboBox {
-					model: ListModel {
-						ListElement {name: "8000"}
-						ListElement {name: "48000"}
+					model: [ "8000", "48000" ]
+					Component.onCompleted: currentIndex = find(c_settings.sampleRate);
+					onActivated: {
+						pitchDetector.sampleRate = currentText;
+						c_settings.sampleRate = pitchDetector.sampleRate;
 					}
-					onCurrentTextChanged: pitchDetector.sampleRate = currentText;
 				}
 			}
 		}
