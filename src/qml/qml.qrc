@@ -4,5 +4,6 @@
         <file>OctaveIndicator.qml</file>
         <file>Settings.qml</file>
         <file>NoteAccuracyIndicator.qml</file>
+        <file>Piano.qml</file>
     </qresource>
 </RCC>

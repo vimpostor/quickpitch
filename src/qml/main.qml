@@ -33,7 +33,10 @@ ApplicationWindow {
 		]
 		ChartView {
 			id: chartView
-			anchors.fill: parent
+			anchors.top: piano.bottom
+			anchors.left: parent.left
+			anchors.right: parent.right
+			anchors.bottom: accuracyIndicator.top
 			legend.visible: false
 			margins.top: 0
 			margins.left: 0
@@ -63,14 +66,18 @@ ApplicationWindow {
 				}
 			}
 		}
-		OctaveIndicator {
-			id: octaveIndicator
+		Piano {
+			id: piano
+			anchors.left: parent.left
+			anchors.right: parent.right
 			anchors.top: parent.top
-			anchors.horizontalCenter: parent.horizontalCenter
-			octave: pitchDetector.confidentPitch.octave
+			height: 300
+			noteName: pitchDetector.confidentPitch.note
 		}
 		NoteAccuracyIndicator {
-			anchors.centerIn: parent
+			id: accuracyIndicator
+			anchors.bottom: parent.bottom
+			anchors.horizontalCenter: parent.horizontalCenter
 			noteName: pitchDetector.confidentPitch.noteLong
 			accuracy: pitchDetector.confidentPitch.accuracy
 		}
