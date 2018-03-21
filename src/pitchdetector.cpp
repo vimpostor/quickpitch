@@ -6,18 +6,6 @@ PitchDetector::PitchDetector(QObject *parent) : QObject(parent)
 	applyFormat();
 	m_rec = std::make_unique<QAudioInput>(m_format);
 	connect(&m_dev, SIGNAL(samplesReady()), this, SLOT(analyzeSamples()));
-
-	// aubio init
-	m_aubioPitch = new_aubio_pitch(m_algorithm.toLatin1().data(), BUF_SIZE, HOP_SIZE, m_sampleRate);
-	m_aubioIn = new_fvec(HOP_SIZE);
-	m_aubioOut = new_fvec(1);
-}
-
-PitchDetector::~PitchDetector()
-{
-	del_aubio_pitch(m_aubioPitch);
-	del_fvec(m_aubioIn);
-	del_fvec(m_aubioOut);
 }
 
 void PitchDetector::setActive(bool active)
@@ -33,13 +21,13 @@ void PitchDetector::setActive(bool active)
 	m_active = active;
 }
 
-void PitchDetector::setAlgorithm(QString algorithm)
+void PitchDetector::setAlgorithm(const QString algorithm)
 {
 	if (algorithm == m_algorithm) {
 		return;
 	}
 	m_algorithm = algorithm;
-	reloadAubio();
+	m_aubio.setAlgorithm(algorithm);
 }
 
 void PitchDetector::setSampleRate(const uint sampleRate)
@@ -51,20 +39,12 @@ void PitchDetector::setSampleRate(const uint sampleRate)
 	applyFormat();
 	m_rec = std::make_unique<QAudioInput>(m_format);
 	setActive(m_active);
-	reloadAubio();
+	m_aubio.setSampleRate(m_sampleRate);
 }
 
 void PitchDetector::setLineSeries(QLineSeries *series)
 {
 	m_dev.series = series;
-}
-
-void PitchDetector::reloadAubio()
-{
-	// create new aubio pitch object
-	// CRITICAL section
-	del_aubio_pitch(m_aubioPitch);
-	m_aubioPitch = new_aubio_pitch(m_algorithm.toLatin1().data(), BUF_SIZE, HOP_SIZE, m_sampleRate);
 }
 
 void PitchDetector::applyFormat()
@@ -94,10 +74,10 @@ void PitchDetector::applyFormat()
 void PitchDetector::analyzeSamples()
 {
 	// while new samples are available
-	while (m_dev.getSamples(m_aubioIn)) {
-		aubio_pitch_do(m_aubioPitch, m_aubioIn, m_aubioOut);
-		float frequency = m_aubioOut->data[0];
-		float confidence = aubio_pitch_get_confidence(m_aubioPitch);
+	while (m_dev.getSamples(m_aubio.aubioIn)) {
+		aubio_pitch_do(m_aubio.getAubioPitch(), m_aubio.aubioIn, m_aubio.aubioOut);
+		float frequency = m_aubio.aubioOut->data[0];
+		float confidence = aubio_pitch_get_confidence(m_aubio.getAubioPitch());
 		m_currentPitch.setPitch(frequency, confidence);
 		if (confidence >= m_confidenceThreshold) {
 			m_lastConfidentPitch = m_currentPitch;

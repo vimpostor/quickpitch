@@ -20,12 +20,14 @@ SOURCES += main.cpp \
     pitchdetector.cpp \
     pitchbuffer.cpp \
 	util.cpp \
-    pitchobj.cpp
+    pitchobj.cpp \
+    aubiowrapper.cpp
 
 # aubio
 QMAKE_CFLAGS += "-include $$_PRO_FILE_PWD_/compilerfix.h"
 QMAKE_CXXFLAGS += "-include $$_PRO_FILE_PWD_/compilerfix.h"
-HEADERS += compilerfix.h
+HEADERS += compilerfix.h \
+    aubiowrapper.h
 SOURCES += ../aubio/src/pitch/pitch.c \
 	../aubio/src/fvec.c \
 	../aubio/src/utils/log.c \

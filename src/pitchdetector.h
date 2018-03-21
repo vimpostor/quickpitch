@@ -7,6 +7,7 @@
 
 #include "pitchbuffer.h"
 #include "pitchobj.h"
+#include "aubiowrapper.h"
 
 class PitchDetector : public QObject
 {
@@ -18,10 +19,9 @@ class PitchDetector : public QObject
 	Q_PROPERTY(uint sampleRate MEMBER m_sampleRate WRITE setSampleRate)
 public:
 	explicit PitchDetector(QObject *parent = nullptr);
-	~PitchDetector();
 
 	void setActive(bool active);
-	void setAlgorithm(QString algorithm);
+	void setAlgorithm(const QString algorithm);
 	void setSampleRate(const uint sampleRate);
 	Q_INVOKABLE void setLineSeries(QLineSeries *series);
 signals:
@@ -29,16 +29,13 @@ signals:
 	void samplesAnalyzed();
 public slots:
 private:
-	void reloadAubio();
 	void applyFormat();
 
 	bool m_active;
 	std::unique_ptr<QAudioInput> m_rec;
 	QAudioFormat m_format;
 	PitchBuffer m_dev;
-	aubio_pitch_t *m_aubioPitch;
-	fvec_t *m_aubioIn;
-	fvec_t *m_aubioOut;
+	AubioWrapper m_aubio;
 	PitchObj m_currentPitch;
 	PitchObj m_lastConfidentPitch;
 	float m_confidenceThreshold = .75;
