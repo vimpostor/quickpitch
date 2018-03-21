@@ -40,7 +40,6 @@ SOURCES += ../aubio/src/pitch/pitch.c \
 	../aubio/src/pitch/pitchschmitt.c \
 	../aubio/src/pitch/pitchspecacf.c \
 	../aubio/src/pitch/pitchyinfft.c \
-	../aubio/src/pitch/pitchyinfast.c \
 	../aubio/src/temporal/filter.c \
 	../aubio/src/mathutils.c \
 	../aubio/src/spectral/fft.c \
