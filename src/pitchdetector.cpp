@@ -3,16 +3,8 @@
 
 PitchDetector::PitchDetector(QObject *parent) : QObject(parent)
 {
-	m_format.setSampleRate(m_sampleRate);
-	m_format.setCodec("audio/pcm");
-	// mono sound
-	m_format.setChannelCount(1);
-	// aubio requires float
-	m_format.setSampleType(QAudioFormat::SampleType::Float);
-	// floats have a size of 32 bit
-	m_format.setSampleSize(sizeof(float) * 8);
 	applyFormat();
-	m_rec = new QAudioInput(m_format);
+	m_rec = std::make_unique<QAudioInput>(m_format);
 	connect(&m_dev, SIGNAL(samplesReady()), this, SLOT(analyzeSamples()));
 
 	// aubio init
@@ -26,7 +18,6 @@ PitchDetector::~PitchDetector()
 	del_aubio_pitch(m_aubioPitch);
 	del_fvec(m_aubioIn);
 	del_fvec(m_aubioOut);
-	delete m_rec;
 }
 
 void PitchDetector::setActive(bool active)
@@ -57,11 +48,8 @@ void PitchDetector::setSampleRate(const uint sampleRate)
 		return;
 	}
 	m_sampleRate = sampleRate;
-	m_format.setSampleRate(m_sampleRate);
 	applyFormat();
-	delete m_rec;
-	m_rec = new QAudioInput(m_format);
-	connect(&m_dev, SIGNAL(samplesReady()), this, SLOT(analyzeSamples()));
+	m_rec = std::make_unique<QAudioInput>(m_format);
 	setActive(m_active);
 	reloadAubio();
 }
@@ -81,6 +69,14 @@ void PitchDetector::reloadAubio()
 
 void PitchDetector::applyFormat()
 {
+	m_format.setCodec("audio/pcm");
+	// mono sound
+	m_format.setChannelCount(1);
+	m_format.setSampleRate(m_sampleRate);
+	// we prefer floats since aubio requires floats
+	m_format.setSampleType(QAudioFormat::SampleType::Float);
+	// floats have a size of 32 bit
+	m_format.setSampleSize(sizeof(float) * 8);
 	// test if the format is supported
 	QAudioDeviceInfo info = QAudioDeviceInfo::defaultInputDevice();
 	if (!info.isFormatSupported(m_format)) {

@@ -33,7 +33,7 @@ private:
 	void applyFormat();
 
 	bool m_active;
-	QAudioInput *m_rec;
+	std::unique_ptr<QAudioInput> m_rec;
 	QAudioFormat m_format;
 	PitchBuffer m_dev;
 	aubio_pitch_t *m_aubioPitch;
