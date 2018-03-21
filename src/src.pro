@@ -88,3 +88,5 @@ HEADERS += \
     pitchbuffer.h \
 	util.h \
 	pitchobj.h
+
+TARGET = QuickPitch

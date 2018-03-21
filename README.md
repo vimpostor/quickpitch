@@ -42,7 +42,7 @@ cd build
 qmake ..
 make
 ```
-Once that building is finished, you can run the executable at `src/src`.
+Once that building is finished, you can run the executable at `src/QuickPitch`.
 
 # Acknowledgements
 - QuickPitch uses [aubio](https://github.com/aubio/aubio) for audio processing
