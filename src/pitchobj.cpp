@@ -2,7 +2,7 @@
 #include <QDebug>
 
 const QString PitchObj::noteNames[12] = {
-	"A", "Ais", "B", "C", "Cis", "D", "Dis", "E", "F", "Fis", "G", "Gis"
+	"A", "Ais", "H", "C", "Cis", "D", "Dis", "E", "F", "Fis", "G", "Gis"
 };
 
 
