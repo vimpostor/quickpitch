@@ -71,11 +71,12 @@ ApplicationWindow {
 			anchors.left: parent.left
 			anchors.right: parent.right
 			anchors.top: parent.top
-			height: 300
+			height: parent.height / 4
 			noteName: pitchDetector.confidentPitch.note
 		}
 		NoteAccuracyIndicator {
 			id: accuracyIndicator
+			height: Math.min(implicitHeight, parent.height / 4)
 			anchors.bottom: parent.bottom
 			anchors.horizontalCenter: parent.horizontalCenter
 			noteName: pitchDetector.confidentPitch.noteLong
