@@ -22,7 +22,7 @@ Quick Pitch requires:
 	- Qt Quick (qt5-declarative)
 	- Qt QML (qt5-declarative)
 	- Qt SVG (qt5-svg)
-	- Qt QUick Controls 2 (qt5-quickcontrols2)
+	- Qt Quick Controls 2 (qt5-quickcontrols2)
 	- Qt Graphical Effects (qt5-graphicaleffects)
 	- Qt Charts (qt5-charts)
 	- Qt Multimedia (qt5-multimedia)
