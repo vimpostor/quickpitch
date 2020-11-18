@@ -25,7 +25,7 @@ TabbedPage {
 			ListItem {
 				text: qsTr("Sample rate")
 				rightItem: ComboBox {
-					model: [ "8000", "48000" ]
+					model: [ "8000", "44100", "48000" ]
 					Component.onCompleted: currentIndex = find(c_settings.sampleRate);
 					onActivated: {
 						pitchDetector.sampleRate = currentText;
