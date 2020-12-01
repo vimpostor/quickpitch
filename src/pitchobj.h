@@ -41,8 +41,8 @@ public:
 	static int offsetToOctave(int aOffset);
 
 	static const QString noteNames[12];
-	static constexpr float halfNoteDiff = std::pow(2.f, 1.f / 12);
-	static constexpr float logHalfNoteDiff = Util::log2(halfNoteDiff);
+	constexpr static const float halfNoteDiff = 1.059463094359295; // std::pow(2.f, 1.f / 12)
+	constexpr static const float logHalfNoteDiff = 0.08333333333; // Util::log2(halfNoteDiff)
 private:
 	float m_frequency;
 	float m_confidence;
