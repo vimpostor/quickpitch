@@ -38,7 +38,7 @@ private:
 	AubioWrapper m_aubio;
 	PitchObj m_currentPitch;
 	PitchObj m_lastConfidentPitch;
-	float m_confidenceThreshold = .75;
+	float m_confidenceThreshold = .0;
 	QString m_algorithm = "default";
 	uint m_sampleRate = 48000;
 private slots:
