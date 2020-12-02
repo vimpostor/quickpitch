@@ -6,7 +6,7 @@ Dialog {
 	ColumnLayout {
 		anchors.fill: parent
 		ComboBox {
-			model: [ "default", "schmitt", "fcomb", "mcomb", "yin", "yinfft" ]
+			model: [ "default", "schmitt", "fcomb", "mcomb", "yin", "yinfast", "yinfft" ]
 			Component.onCompleted: currentIndex = find(c_settings.algorithm);
 			onActivated: {
 				pitchDetector.algorithm = currentText;
